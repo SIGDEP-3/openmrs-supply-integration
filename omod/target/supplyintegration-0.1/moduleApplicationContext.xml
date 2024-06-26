@@ -27,14 +27,14 @@
 
     <!-- Wraps MSupplyIntegrationService methods in DB transactions and OpenMRS interceptors,
     which set audit info like dateCreated, changedBy, etc.-->
-    <bean id="msupplyintegration.MSupplyIntegrationService"
+    <bean id="supplyintegration.SupplyIntegrationService"
             class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
         <property name="transactionManager">
             <ref bean="transactionManager" />
         </property>
         <property name="target">
             <bean class="org.openmrs.module.supplyintegration.api.impl.SupplyIntegrationServiceImpl">
-                <property name="dao" ref="msupplyintegration.MSupplyIntegrationDao" />
+                <property name="dao" ref="supplyintegration.SupplyIntegrationDao" />
             </bean>
         </property>
         <property name="preInterceptors">
@@ -51,7 +51,7 @@
         <property name="moduleService">
             <list>
                 <value>org.openmrs.module.supplyintegration.api.SupplyIntegrationService</value>
-                <ref bean="msupplyintegration.MSupplyIntegrationService" />
+                <ref bean="supplyintegration.SupplyIntegrationService" />
             </list>
         </property>
     </bean>

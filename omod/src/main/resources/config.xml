@@ -57,7 +57,7 @@
 		<defaultValue>password</defaultValue>
 	</globalProperty>
 	<globalProperty>
-		<property>@MODULE_ID@.openmrsPEncounterType.uuid</property>
+		<property>@MODULE_ID@.openmrsEncounterType.uuid</property>
 		<description>Encounter type used to create and link the Drug Order to the encounter</description>
 		<defaultValue>encounter type uuid</defaultValue>
 	</globalProperty>

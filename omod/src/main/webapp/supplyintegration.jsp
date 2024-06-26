@@ -2,9 +2,10 @@
 
 <%@ include file="/WEB-INF/template/header.jsp"%>
 
-<h2><spring:message code="msupplyintegration.title" /></h2>
+<h2><spring:message code="supplyintegration.title" /></h2>
 
 <br/>
+<h3><spring:message code="supplyintegration.formTitle" /></h3>
 <table>
   <tr>
    <th>User Id</th>
@@ -14,7 +15,7 @@
       <tr>
         <td>${user.userId}</td>
         <td>${user.systemId}</td>
-      </tr>		
+      </tr>
   </c:forEach>
 </table>
 
