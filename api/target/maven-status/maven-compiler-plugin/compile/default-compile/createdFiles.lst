@@ -1,0 +1,6 @@
+org/openmrs/module/supplyintegration/SupplyIntegrationConfig.class
+org/openmrs/module/supplyintegration/api/SupplyIntegrationService.class
+org/openmrs/module/supplyintegration/api/impl/SupplyIntegrationServiceImpl.class
+org/openmrs/module/supplyintegration/api/dao/SupplyIntegrationDao.class
+org/openmrs/module/supplyintegration/Item.class
+org/openmrs/module/supplyintegration/SupplyIntegrationActivator.class
