@@ -17,7 +17,7 @@
 	<!-- <updateURL>https://modules.openmrs.org/modules/download/@MODULE_ID@/update.rdf</updateURL> -->
 	<!-- /Base Module Properties -->
 	
-	<require_version>2.3.2</require_version>
+	<require_version>2.3.3</require_version>
 	
 	<!-- Extensions -->
 	<extension>
@@ -44,7 +44,7 @@
 	<globalProperty>
 		<property>@MODULE_ID@.URL</property>
 		<description>URL for the IL</description>
-		<defaultValue>https://interoperability-layer-url.link</defaultValue>
+		<defaultValue>https://interoperability-layer-url/URL_Path</defaultValue>
 	</globalProperty>
 	<globalProperty>
 		<property>@MODULE_ID@.userName</property>
