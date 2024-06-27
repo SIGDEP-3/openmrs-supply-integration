@@ -2,7 +2,7 @@
 *.iml
 *.ipr
 *.iws
-.idea/
+.idea
 
 ### Java ###
 *.class
@@ -20,7 +20,8 @@
 #############
 
 ### Maven ###
-target/
+omod/target/
+api/target/
 #############
 .idea/workspace.xml
 .idea/libraries/Maven__org_apache_poi_poi_4_0_0.xml

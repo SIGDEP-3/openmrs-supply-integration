@@ -9,12 +9,15 @@
  */
 package org.openmrs.module.supplyintegration.web.controller;
 
+import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.xpath.operations.Bool;
 import org.openmrs.GlobalProperty;
 import org.openmrs.User;
 import org.openmrs.api.UserService;
@@ -22,9 +25,11 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.supplyintegration.api.SupplyIntegrationService;
 import org.openmrs.module.supplyintegration.api.forms.ConnexionForm;
 import org.openmrs.module.supplyintegration.api.forms.ConnexionFormValidation;
+import org.openmrs.util.Security;
 import org.openmrs.web.WebConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -57,21 +62,50 @@ public class SupplyIntegrationController {
 	 * @return String form view name
 	 */
 	@RequestMapping(method = RequestMethod.GET)
-	public String onGet() {
+	public String onGet(ModelMap modelMap) throws IOException {
+		List<GlobalProperty> globalProperties = Context.getAdministrationService().getGlobalPropertiesByPrefix(
+		    "supplyintegration");
+		ConnexionForm connexionForm = new ConnexionForm();
+		String connexionMessage = "";
+		boolean connexionStatus = false;
+		for (GlobalProperty globalProperty : globalProperties) {
+			if (globalProperty.getProperty().equals("supplyintegration.URL")) {
+				connexionForm.setUrl(globalProperty.getPropertyValue());
+			} else if (globalProperty.getProperty().equals("supplyintegration.password")) {
+				connexionForm.setPassword(Security.decrypt(globalProperty.getPropertyValue()));
+			} else if (globalProperty.getProperty().equals("supplyintegration.userName")) {
+				connexionForm.setUsername(globalProperty.getPropertyValue());
+			}
+		}
+		
+		if (getService().testServer(connexionForm.getUrl(), connexionForm.getUsername(), connexionForm.getPassword())) {
+			connexionStatus = true;
+			connexionMessage = "Vous êtes connecté pour échange de données";
+		} else {
+			connexionMessage = "Vous n'êtes pas connecté pour échange de données";
+		}
+		
+		modelMap.addAttribute("connexionForm", connexionForm);
+		modelMap.addAttribute("connexionMessage", connexionMessage);
+		modelMap.addAttribute("connexionStatus", connexionStatus);
+		
 		return VIEW;
 	}
 	
 	/**
 	 * All the parameters are optional based on the necessity
 	 * 
-	 * @param httpSession
+	 * @param request
 	 * @param connexionForm
 	 * @param errors
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.POST)
-	public String onPost(HttpSession httpSession, @ModelAttribute("connexionForm") ConnexionForm connexionForm,
-	        BindingResult errors) {
+	public String onPost(ModelMap modelMap, HttpServletRequest request,
+	        @ModelAttribute("connexionForm") ConnexionForm connexionForm, BindingResult errors) throws IOException {
+		HttpSession httpSession = request.getSession();
+		
+		httpSession.setAttribute(WebConstants.OPENMRS_ERROR_ARGS, "Formulaire !");
 		
 		new ConnexionFormValidation().validate(connexionForm, errors);
 		
@@ -81,31 +115,33 @@ public class SupplyIntegrationController {
 		} else {
 			System.out.println("Connexion URL : " + connexionForm.getUrl());
 			System.out.println("Connexion User name : " + connexionForm.getUsername());
-			System.out.println("Connexion Password : " + connexionForm.getUrl());
+			System.out.println("Connexion Password : " + connexionForm.getPassword());
 			
 			if (getService().testServer(connexionForm.getUrl(), connexionForm.getUsername(), connexionForm.getPassword())) {
 				List<GlobalProperty> globalProperties = Context.getAdministrationService().getGlobalPropertiesByPrefix(
 				    "supplyintegration");
 				for (GlobalProperty globalProperty : globalProperties) {
-					if (globalProperty.getProperty().equals("supplyintegration.url")) {
+					if (globalProperty.getProperty().equals("supplyintegration.URL")) {
 						globalProperty.setPropertyValue(connexionForm.getUrl());
 					} else if (globalProperty.getProperty().equals("supplyintegration.password")) {
-						globalProperty.setPropertyValue(connexionForm.getUrl());
-					} else if (globalProperty.getProperty().equals("supplyintegration.username")) {
-						globalProperty.setPropertyValue(connexionForm.getUrl());
+						globalProperty.setPropertyValue(Security.encrypt(connexionForm.getPassword()));
+					} else if (globalProperty.getProperty().equals("supplyintegration.userName")) {
+						globalProperty.setPropertyValue(connexionForm.getUsername());
 					}
 					Context.getAdministrationService().saveGlobalProperty(globalProperty);
 				}
 				httpSession.setAttribute(WebConstants.OPENMRS_MSG_ARGS,
 				    "La connexion au serveur a été effectuée avec succès !");
+				
 			} else {
 				httpSession.setAttribute(WebConstants.OPENMRS_ERROR_ARGS,
-				    "La connexion au serveur a échouée, veuillez vérifier vos paramètres de connexion");
+				    "La connexion au serveur a échoué, veuillez vérifier vos paramètres de connexion");
 			}
 			
+			modelMap.addAttribute("connexionForm", connexionForm);
 		}
 		
-		return null;
+		return VIEW;
 	}
 	
 	/**

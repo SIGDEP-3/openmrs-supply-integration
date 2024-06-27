@@ -16,6 +16,8 @@ import org.openmrs.module.supplyintegration.Item;
 import org.openmrs.module.supplyintegration.api.SupplyIntegrationService;
 import org.openmrs.module.supplyintegration.api.dao.SupplyIntegrationDao;
 
+import java.io.IOException;
+
 public class SupplyIntegrationServiceImpl extends BaseOpenmrsService implements SupplyIntegrationService {
 	
 	SupplyIntegrationDao dao;
@@ -51,7 +53,7 @@ public class SupplyIntegrationServiceImpl extends BaseOpenmrsService implements 
 	}
 	
 	@Override
-	public boolean testServer(String url, String user, String pass) {
+	public boolean testServer(String url, String user, String pass) throws IOException {
 		return dao.testServer(url, user, pass);
 	}
 }
