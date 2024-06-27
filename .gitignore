@@ -1,0 +1,27 @@
+### IntelliJ Idea ###
+*.iml
+*.ipr
+*.iws
+.idea/
+
+### Java ###
+*.class
+
+# Java Package Files #
+*.jar
+*.war
+*.ear
+
+### Linux ###
+.*
+!.gitignore
+!.gitattributes
+*~
+#############
+
+### Maven ###
+target/
+#############
+.idea/workspace.xml
+.idea/libraries/Maven__org_apache_poi_poi_4_0_0.xml
+.idea/libraries/Maven__org_apache_commons_commons_collections4_4_2.xml
