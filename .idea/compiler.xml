@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="msupplyintegration-omod" />
         <module name="msupplyintegration-api" />
+        <module name="supplyintegration-api" />
       </profile>
     </annotationProcessing>
   </component>
