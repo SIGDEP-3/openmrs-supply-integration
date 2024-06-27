@@ -49,4 +49,9 @@ public class SupplyIntegrationServiceImpl extends BaseOpenmrsService implements 
 		
 		return dao.saveItem(item);
 	}
+	
+	@Override
+	public boolean testServer(String url, String user, String pass) {
+		return dao.testServer(url, user, pass);
+	}
 }

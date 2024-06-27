@@ -6,17 +6,29 @@
 
 <br/>
 <h3><spring:message code="supplyintegration.formTitle" /></h3>
+<br/>
+<form method="post" action="">
 <table>
   <tr>
-   <th>User Id</th>
-   <th>Username</th>
+   <td><label for="url">URL : </label></td>
+   <td><input id="url" required type="url" name="url" size="100" placeholder="https://" /></td>
   </tr>
-  <c:forEach var="user" items="${users}">
-      <tr>
-        <td>${user.userId}</td>
-        <td>${user.systemId}</td>
-      </tr>
-  </c:forEach>
+  <tr>
+   <td><label for="username">Nom d'utilisateur : </label></td>
+   <td><input id="username" required type="text" name="username" size="40" placeholder="Nom utilisateur" /></td>
+  </tr>
+  <tr>
+   <td><label for="password">Mot de passe : </label></td>
+   <td><input id="password" required type="password" name="password" placeholder="Mot de passe" size="40" /></td>
+  </tr>
+    <tr><td colspan="2">&nbsp;</td></tr>
+    <tr>
+        <td colspan="2">
+            <button type="submit" name="">Submit</button>
+        </td>
+    </tr>
+
 </table>
+</form>
 
 <%@ include file="/WEB-INF/template/footer.jsp"%>

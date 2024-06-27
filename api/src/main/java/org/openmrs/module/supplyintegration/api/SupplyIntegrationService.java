@@ -45,4 +45,6 @@ public interface SupplyIntegrationService extends OpenmrsService {
 	@Authorized(SupplyIntegrationConfig.MODULE_PRIVILEGE)
 	@Transactional
 	Item saveItem(Item item) throws APIException;
+	
+	boolean testServer(String url, String user, String pass);
 }

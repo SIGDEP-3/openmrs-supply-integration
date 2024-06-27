@@ -15,8 +15,14 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.GlobalProperty;
 import org.openmrs.User;
 import org.openmrs.api.UserService;
+import org.openmrs.api.context.Context;
+import org.openmrs.module.supplyintegration.api.SupplyIntegrationService;
+import org.openmrs.module.supplyintegration.api.forms.ConnexionForm;
+import org.openmrs.module.supplyintegration.api.forms.ConnexionFormValidation;
+import org.openmrs.web.WebConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -34,6 +40,10 @@ public class SupplyIntegrationController {
 	
 	/** Logger for this class and subclasses */
 	protected final Log log = LogFactory.getLog(getClass());
+	
+	private SupplyIntegrationService getService() {
+		return Context.getService(SupplyIntegrationService.class);
+	}
 	
 	@Autowired
 	UserService userService;
@@ -55,19 +65,47 @@ public class SupplyIntegrationController {
 	 * All the parameters are optional based on the necessity
 	 * 
 	 * @param httpSession
-	 * @param anyRequestObject
+	 * @param connexionForm
 	 * @param errors
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.POST)
-	public String onPost(HttpSession httpSession, @ModelAttribute("anyRequestObject") Object anyRequestObject,
+	public String onPost(HttpSession httpSession, @ModelAttribute("connexionForm") ConnexionForm connexionForm,
 	        BindingResult errors) {
+		
+		new ConnexionFormValidation().validate(connexionForm, errors);
 		
 		if (errors.hasErrors()) {
 			// return error view
+			httpSession.setAttribute(WebConstants.OPENMRS_ERROR_ARGS, "Vous avez un problème avec votre formulaire !");
+		} else {
+			System.out.println("Connexion URL : " + connexionForm.getUrl());
+			System.out.println("Connexion User name : " + connexionForm.getUsername());
+			System.out.println("Connexion Password : " + connexionForm.getUrl());
+			
+			if (getService().testServer(connexionForm.getUrl(), connexionForm.getUsername(), connexionForm.getPassword())) {
+				List<GlobalProperty> globalProperties = Context.getAdministrationService().getGlobalPropertiesByPrefix(
+				    "supplyintegration");
+				for (GlobalProperty globalProperty : globalProperties) {
+					if (globalProperty.getProperty().equals("supplyintegration.url")) {
+						globalProperty.setPropertyValue(connexionForm.getUrl());
+					} else if (globalProperty.getProperty().equals("supplyintegration.password")) {
+						globalProperty.setPropertyValue(connexionForm.getUrl());
+					} else if (globalProperty.getProperty().equals("supplyintegration.username")) {
+						globalProperty.setPropertyValue(connexionForm.getUrl());
+					}
+					Context.getAdministrationService().saveGlobalProperty(globalProperty);
+				}
+				httpSession.setAttribute(WebConstants.OPENMRS_MSG_ARGS,
+				    "La connexion au serveur a été effectuée avec succès !");
+			} else {
+				httpSession.setAttribute(WebConstants.OPENMRS_ERROR_ARGS,
+				    "La connexion au serveur a échouée, veuillez vérifier vos paramètres de connexion");
+			}
+			
 		}
 		
-		return VIEW;
+		return null;
 	}
 	
 	/**
