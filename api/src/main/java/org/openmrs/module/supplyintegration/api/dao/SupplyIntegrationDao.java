@@ -9,12 +9,27 @@
  */
 package org.openmrs.module.supplyintegration.api.dao;
 
+import org.apache.http.Header;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpResponse;
+import org.apache.http.auth.Credentials;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.auth.BasicScheme;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.protocol.BasicHttpContext;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.api.db.hibernate.DbSession;
 import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.module.supplyintegration.Item;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 @Repository("supplyintegration.SupplyIntegrationDao")
 public class SupplyIntegrationDao {
@@ -33,5 +48,53 @@ public class SupplyIntegrationDao {
 	public Item saveItem(Item item) {
 		getSession().saveOrUpdate(item);
 		return item;
+	}
+	
+	public boolean testServer(String url, String user, String pass) {
+		URL testURL;
+		boolean success = true;
+		
+		// Check if the URL makes sense
+		try {
+			testURL = new URL(url); // Add the root API
+			// endpoint to the URL
+		}
+		catch (MalformedURLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		final HttpParams httpParams = new BasicHttpParams();
+		HttpConnectionParams.setConnectionTimeout(httpParams, 4000);
+		
+		HttpHost targetHost = new HttpHost(testURL.getHost(), testURL.getPort(), testURL.getProtocol());
+		DefaultHttpClient httpClient = new DefaultHttpClient(httpParams);
+		
+		BasicHttpContext localContext = new BasicHttpContext();
+		
+		try {
+			HttpGet httpGet = new HttpGet(testURL.toURI());
+			Credentials creds = new UsernamePasswordCredentials(user, pass);
+			Header bs = new BasicScheme().authenticate(creds, httpGet, localContext);
+			httpGet.addHeader("Authorization", bs.getValue());
+			httpGet.addHeader("Content-Type", "application/json");
+			httpGet.addHeader("Accept", "application/json");
+			
+			//execute the test query
+			HttpResponse response = httpClient.execute(targetHost, httpGet, localContext);
+			
+			if (response.getStatusLine().getStatusCode() != 200) {
+				success = false;
+			}
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			success = false;
+		}
+		finally {
+			httpClient.getConnectionManager().shutdown();
+		}
+		
+		return success;
 	}
 }

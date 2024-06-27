@@ -1,6 +1,8 @@
 /Users/bogui/IdeaProjects/msupplyintegration/api/src/main/java/org/openmrs/module/supplyintegration/Item.java
+/Users/bogui/IdeaProjects/msupplyintegration/api/src/main/java/org/openmrs/module/supplyintegration/api/forms/ConnexionFormValidation.java
 /Users/bogui/IdeaProjects/msupplyintegration/api/src/main/java/org/openmrs/module/supplyintegration/SupplyIntegrationConfig.java
 /Users/bogui/IdeaProjects/msupplyintegration/api/src/main/java/org/openmrs/module/supplyintegration/SupplyIntegrationActivator.java
+/Users/bogui/IdeaProjects/msupplyintegration/api/src/main/java/org/openmrs/module/supplyintegration/api/forms/ConnexionForm.java
 /Users/bogui/IdeaProjects/msupplyintegration/api/src/main/java/org/openmrs/module/supplyintegration/api/dao/SupplyIntegrationDao.java
 /Users/bogui/IdeaProjects/msupplyintegration/api/src/main/java/org/openmrs/module/supplyintegration/api/SupplyIntegrationService.java
 /Users/bogui/IdeaProjects/msupplyintegration/api/src/main/java/org/openmrs/module/supplyintegration/api/impl/SupplyIntegrationServiceImpl.java
