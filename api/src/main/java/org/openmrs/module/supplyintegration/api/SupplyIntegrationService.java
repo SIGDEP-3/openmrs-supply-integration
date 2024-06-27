@@ -16,6 +16,8 @@ import org.openmrs.module.supplyintegration.SupplyIntegrationConfig;
 import org.openmrs.module.supplyintegration.Item;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+
 /**
  * The main service of this module, which is exposed for other modules. See
  * moduleApplicationContext.xml on how it is wired up.
@@ -46,5 +48,5 @@ public interface SupplyIntegrationService extends OpenmrsService {
 	@Transactional
 	Item saveItem(Item item) throws APIException;
 	
-	boolean testServer(String url, String user, String pass);
+	boolean testServer(String url, String user, String pass) throws IOException;
 }

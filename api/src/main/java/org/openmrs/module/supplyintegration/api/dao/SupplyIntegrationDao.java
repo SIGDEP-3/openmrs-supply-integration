@@ -9,14 +9,20 @@
  */
 package org.openmrs.module.supplyintegration.api.dao;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
+import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.auth.BasicScheme;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.*;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
@@ -28,11 +34,14 @@ import org.openmrs.module.supplyintegration.Item;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 @Repository("supplyintegration.SupplyIntegrationDao")
 public class SupplyIntegrationDao {
+	
+	protected final Log log = LogFactory.getLog(getClass());
 	
 	@Autowired
 	DbSessionFactory sessionFactory;
@@ -50,9 +59,9 @@ public class SupplyIntegrationDao {
 		return item;
 	}
 	
-	public boolean testServer(String url, String user, String pass) {
+	public boolean testServer(String url, String user, String pass) throws IOException {
 		URL testURL;
-		boolean success = true;
+		boolean success = false;
 		
 		// Check if the URL makes sense
 		try {
@@ -60,39 +69,49 @@ public class SupplyIntegrationDao {
 			// endpoint to the URL
 		}
 		catch (MalformedURLException e) {
-			e.printStackTrace();
+			e.fillInStackTrace();
 			return false;
 		}
 		
-		final HttpParams httpParams = new BasicHttpParams();
-		HttpConnectionParams.setConnectionTimeout(httpParams, 4000);
+		//		CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+		//
+		//		credentialsProvider.setCredentials(new AuthScope(url, 11223), new UsernamePasswordCredentials(user, pass));
 		
+		CloseableHttpClient httpclient = HttpClients.custom().build();
+		
+		//				final HttpParams httpParams = new BasicHttpParams();
+		//				HttpConnectionParams.setConnectionTimeout(httpParams, 4000);
 		HttpHost targetHost = new HttpHost(testURL.getHost(), testURL.getPort(), testURL.getProtocol());
-		DefaultHttpClient httpClient = new DefaultHttpClient(httpParams);
+		//		//		DefaultHttpClient httpClient = new DefaultHttpClient(httpParams);
+		//		HttpClient httpClient = new DefaultHttpClient();
 		
 		BasicHttpContext localContext = new BasicHttpContext();
 		
 		try {
 			HttpGet httpGet = new HttpGet(testURL.toURI());
-			Credentials creds = new UsernamePasswordCredentials(user, pass);
-			Header bs = new BasicScheme().authenticate(creds, httpGet, localContext);
+			Credentials credentials = new UsernamePasswordCredentials(user, pass);
+			Header bs = new BasicScheme().authenticate(credentials, httpGet, localContext);
+			
 			httpGet.addHeader("Authorization", bs.getValue());
 			httpGet.addHeader("Content-Type", "application/json");
 			httpGet.addHeader("Accept", "application/json");
 			
 			//execute the test query
-			HttpResponse response = httpClient.execute(targetHost, httpGet, localContext);
+			//			HttpResponse response = httpClient.execute(targetHost, httpGet, localContext);
+			CloseableHttpResponse response = httpclient.execute(targetHost, httpGet, localContext);
 			
-			if (response.getStatusLine().getStatusCode() != 200) {
-				success = false;
+			log.debug("----------------------------------------> : " + response.getStatusLine().getStatusCode());
+			if (response.getStatusLine().getStatusCode() == 200) {
+				success = true;
 			}
 		}
 		catch (Exception ex) {
-			ex.printStackTrace();
-			success = false;
+			ex.fillInStackTrace();
+			//			success = false;
 		}
 		finally {
-			httpClient.getConnectionManager().shutdown();
+			httpclient.close();
+			log.debug("---------------------------------------> Connection closed");
 		}
 		
 		return success;
