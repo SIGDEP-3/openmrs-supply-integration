@@ -54,7 +54,7 @@
 	<globalProperty>
 		<property>@MODULE_ID@.password</property>
 		<description>Password for HTTP Basic Auth with the IL</description>
-		<defaultValue>password</defaultValue>
+		<defaultValue></defaultValue>
 	</globalProperty>
 	<globalProperty>
 		<property>@MODULE_ID@.openmrsEncounterType.uuid</property>
