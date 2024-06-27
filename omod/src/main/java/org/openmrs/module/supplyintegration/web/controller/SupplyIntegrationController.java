@@ -149,13 +149,13 @@ public class SupplyIntegrationController {
 	 * pojo. The bean name defined in the ModelAttribute annotation and the type can be just defined
 	 * by the return type of this method
 	 */
-	@ModelAttribute("users")
-	protected List<User> getUsers() throws Exception {
-		List<User> users = userService.getAllUsers();
-		
-		// this object will be made available to the jsp page under the variable name
-		// that is defined in the @ModuleAttribute tag
-		return users;
-	}
+//	@ModelAttribute("users")
+//	protected List<User> getUsers() throws Exception {
+//		List<User> users = userService.getAllUsers();
+//
+//		// this object will be made available to the jsp page under the variable name
+//		// that is defined in the @ModuleAttribute tag
+//		return users;
+//	}
 	
 }
