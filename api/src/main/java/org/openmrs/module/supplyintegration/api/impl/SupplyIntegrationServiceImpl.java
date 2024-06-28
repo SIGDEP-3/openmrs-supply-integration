@@ -12,7 +12,7 @@ package org.openmrs.module.supplyintegration.api.impl;
 import org.openmrs.api.APIException;
 import org.openmrs.api.UserService;
 import org.openmrs.api.impl.BaseOpenmrsService;
-import org.openmrs.module.supplyintegration.Item;
+import org.openmrs.module.supplyintegration.SupplyIntegrationOrder;
 import org.openmrs.module.supplyintegration.api.SupplyIntegrationService;
 import org.openmrs.module.supplyintegration.api.dao.SupplyIntegrationDao;
 
@@ -39,17 +39,17 @@ public class SupplyIntegrationServiceImpl extends BaseOpenmrsService implements 
 	}
 	
 	@Override
-	public Item getItemByUuid(String uuid) throws APIException {
+	public SupplyIntegrationOrder getItemByUuid(String uuid) throws APIException {
 		return dao.getItemByUuid(uuid);
 	}
 	
 	@Override
-	public Item saveItem(Item item) throws APIException {
-		if (item.getOwner() == null) {
-			item.setOwner(userService.getUser(1));
+	public SupplyIntegrationOrder saveItem(SupplyIntegrationOrder supplyIntegrationOrder) throws APIException {
+		if (supplyIntegrationOrder.getOwner() == null) {
+			supplyIntegrationOrder.setOwner(userService.getUser(1));
 		}
 		
-		return dao.saveItem(item);
+		return dao.saveItem(supplyIntegrationOrder);
 	}
 	
 	@Override

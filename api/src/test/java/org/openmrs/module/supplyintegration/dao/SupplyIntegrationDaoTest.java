@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.junit.Ignore;
 import org.openmrs.api.UserService;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.supplyintegration.Item;
+import org.openmrs.module.supplyintegration.SupplyIntegrationOrder;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import static org.hamcrest.Matchers.*;
@@ -37,22 +37,22 @@ public class SupplyIntegrationDaoTest extends BaseModuleContextSensitiveTest {
 	@Ignore("Unignore if you want to make the Item class persistable, see also Item and liquibase.xml")
 	public void saveItem_shouldSaveAllPropertiesInDb() {
 		//Given
-		Item item = new Item();
-		item.setDescription("some description");
-		item.setOwner(userService.getUser(1));
+		SupplyIntegrationOrder supplyIntegrationOrder = new SupplyIntegrationOrder();
+		supplyIntegrationOrder.setDescription("some description");
+		supplyIntegrationOrder.setOwner(userService.getUser(1));
 		
 		//When
-		dao.saveItem(item);
+		dao.saveItem(supplyIntegrationOrder);
 		
 		//Let's clean up the cache to be sure getItemByUuid fetches from DB and not from cache
 		Context.flushSession();
 		Context.clearSession();
 		
 		//Then
-		Item savedItem = dao.getItemByUuid(item.getUuid());
+		SupplyIntegrationOrder savedSupplyIntegrationOrder = dao.getItemByUuid(supplyIntegrationOrder.getUuid());
 		
-		assertThat(savedItem, hasProperty("uuid", is(item.getUuid())));
-		assertThat(savedItem, hasProperty("owner", is(item.getOwner())));
-		assertThat(savedItem, hasProperty("description", is(item.getDescription())));
+		assertThat(savedSupplyIntegrationOrder, hasProperty("uuid", is(supplyIntegrationOrder.getUuid())));
+		assertThat(savedSupplyIntegrationOrder, hasProperty("owner", is(supplyIntegrationOrder.getOwner())));
+		assertThat(savedSupplyIntegrationOrder, hasProperty("description", is(supplyIntegrationOrder.getDescription())));
 	}
 }

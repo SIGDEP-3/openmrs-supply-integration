@@ -9,45 +9,50 @@
  */
 package org.openmrs.module.supplyintegration;
 
-import org.openmrs.BaseOpenmrsData;
-import org.openmrs.User;
+import lombok.Getter;
+import lombok.Setter;
+import org.openmrs.BaseOpenmrsObject;
+import org.openmrs.Order;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.util.Date;
 
 /**
  * Please note that a corresponding table schema must be created in liquibase.xml.
  */
 //Uncomment 2 lines below if you want to make the Item class persistable, see also MSupplyIntegrationDaoTest and liquibase.xml
-//@Entity(name = "msupplyintegration.Item")
-//@Table(name = "msupplyintegration_item")
-public class Item extends BaseOpenmrsData {
-	
+@Entity(name = "supplyintegration.SupplyIntegrationOrder")
+@Table(name = "supply_integration_order")
+@Setter
+@Getter
+public class SupplyIntegrationOrder extends BaseOpenmrsObject {
 	@Id
 	@GeneratedValue
-	@Column(name = "msupplyintegration_item_id")
-	private Integer id;
+	@Column(name = "supply_integration_order_id")
+	private Integer supplyIntegrationOrderId;
 	
 	@ManyToOne
-	@JoinColumn(name = "owner")
-	private User owner;
+	@JoinColumn(name = "order_id", nullable = false)
+	private Order order;
 	
 	@Basic
-	@Column(name = "description", length = 255)
-	private String description;
+	@Column(name = "status", length = 255)
+	private String status;
+	
+	@Column(name = "last_transfer_attempt_date")
+	private Date lastTransferAttemptDate;
+	
+	@Column(name = "date_created", nullable = false)
+	private Date dateCreated;
 	
 	@Override
 	public Integer getId() {
-		return id;
+		return getSupplyIntegrationId();
 	}
 	
 	@Override
 	public void setId(Integer id) {
-		this.id = id;
+		setSupplyIntegrationId(id);
 	}
 	
 	@Override
@@ -60,19 +65,4 @@ public class Item extends BaseOpenmrsData {
 		super.setUuid(uuid);
 	}
 	
-	public User getOwner() {
-		return owner;
-	}
-	
-	public void setOwner(User owner) {
-		this.owner = owner;
-	}
-	
-	public String getDescription() {
-		return description;
-	}
-	
-	public void setDescription(String description) {
-		this.description = description;
-	}
 }

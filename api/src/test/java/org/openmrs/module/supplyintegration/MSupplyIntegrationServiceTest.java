@@ -16,7 +16,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.openmrs.User;
 import org.openmrs.api.UserService;
-import org.openmrs.module.supplyintegration.Item;
+import org.openmrs.module.supplyintegration.SupplyIntegrationOrder;
 import org.openmrs.module.supplyintegration.api.dao.SupplyIntegrationDao;
 import org.openmrs.module.supplyintegration.api.impl.SupplyIntegrationServiceImpl;
 import static org.mockito.Mockito.*;
@@ -46,18 +46,18 @@ public class MSupplyIntegrationServiceTest {
 	@Test
 	public void saveItem_shouldSetOwnerIfNotSet() {
 		//Given
-		Item item = new Item();
-		item.setDescription("some description");
+		SupplyIntegrationOrder supplyIntegrationOrder = new SupplyIntegrationOrder();
+		supplyIntegrationOrder.setDescription("some description");
 		
-		when(dao.saveItem(item)).thenReturn(item);
+		when(dao.saveItem(supplyIntegrationOrder)).thenReturn(supplyIntegrationOrder);
 		
 		User user = new User();
 		when(userService.getUser(1)).thenReturn(user);
 		
 		//When
-		basicModuleService.saveItem(item);
+		basicModuleService.saveItem(supplyIntegrationOrder);
 		
 		//Then
-		assertThat(item, hasProperty("owner", is(user)));
+		assertThat(supplyIntegrationOrder, hasProperty("owner", is(user)));
 	}
 }

@@ -14,26 +14,40 @@
     -->
  
  	<!-- Uncomment the changeset below if you want to make the Item class persistable, see also Item and MSupplyIntegrationDaoTest -->
- 	<!--
-	<changeSet id="msupplyintegration-2016-08-02-12-21" author="raff">
+
+	<changeSet id="supply-integration-2016-08-02-12-21" author="raff">
 		<preConditions onFail="MARK_RAN">
-			<not><tableExists tableName="msupplyintegration_item"/></not>
+			<not><tableExists tableName="supply_integration_order"/></not>
 		</preConditions>
 		<comment>
-			Creating the msupplyintegration_item table
+			Creating the supply_integration_order table
 		</comment>
-		<createTable tableName="msupplyintegration_item">
-			<column name="msupplyintegration_item_id" type="int" autoIncrement="true">
+		<createTable tableName="supply_integration_order">
+
+			<column name="supply_integration_order_id" type="int" autoIncrement="true">
 				<constraints primaryKey="true" nullable="false"/>
 			</column>
-			<column name="uuid" type="char(38)">
-				<constraints nullable="false" unique="true"></constraints>
+
+			<column name="order_id" type="int">
+				<constraints nullable="false"/>
 			</column>
-			<column name="owner" type="int" />
-			<column name="description" type="varchar(255)" />
+
+			<column name="status" type="varchar(50)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="date_created" type="datetime">
+				<constraints nullable="false"/>
+			</column>
+			<column name="last_transfer_attempt_date" type="datetime" />
+
+			<column name="uuid" type="char(38)">
+				<constraints nullable="false" unique="true"/>
+			</column>
+
 		</createTable>
-        <addForeignKeyConstraint constraintName="msupplyintegration_item_owner_fk" baseTableName="msupplyintegration_item" baseColumnNames="owner"  referencedTableName="users"
-                                 referencedColumnNames="user_id" />
-    </changeSet> -->
+        <addForeignKeyConstraint constraintName="supply_integration_order_fk" baseTableName="supply_integration_order"
+        baseColumnNames="order_id"  referencedTableName="orders"
+                                 referencedColumnNames="order_id" />
+    </changeSet>
  
 </databaseChangeLog>

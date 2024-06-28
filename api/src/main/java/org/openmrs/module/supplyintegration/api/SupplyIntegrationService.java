@@ -13,7 +13,7 @@ import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.supplyintegration.SupplyIntegrationConfig;
-import org.openmrs.module.supplyintegration.Item;
+import org.openmrs.module.supplyintegration.SupplyIntegrationOrder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
@@ -34,19 +34,19 @@ public interface SupplyIntegrationService extends OpenmrsService {
 	 */
 	@Authorized()
 	@Transactional(readOnly = true)
-	Item getItemByUuid(String uuid) throws APIException;
+	SupplyIntegrationOrder getItemByUuid(String uuid) throws APIException;
 	
 	/**
 	 * Saves an item. Sets the owner to superuser, if it is not set. It can be called by users with
 	 * this module's privilege. It is executed in a transaction.
 	 * 
-	 * @param item
+	 * @param supplyIntegrationOrder
 	 * @return
 	 * @throws APIException
 	 */
 	@Authorized(SupplyIntegrationConfig.MODULE_PRIVILEGE)
 	@Transactional
-	Item saveItem(Item item) throws APIException;
+	SupplyIntegrationOrder saveItem(SupplyIntegrationOrder supplyIntegrationOrder) throws APIException;
 	
 	boolean testServer(String url, String user, String pass) throws IOException;
 }

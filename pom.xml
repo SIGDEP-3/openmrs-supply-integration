@@ -61,6 +61,18 @@
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
+				<groupId>org.openmrs.module</groupId>
+				<artifactId>fhir2-api</artifactId>
+				<version>${fhir2Version}</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.openmrs.module</groupId>
+				<artifactId>fhir2-omod</artifactId>
+				<version>${fhir2Version}</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
 				<groupId>org.projectlombok</groupId>
 				<artifactId>lombok</artifactId>
 				<version>1.18.12</version>
@@ -71,5 +83,6 @@
 
     <properties>
 	    <openmrsPlatformVersion>2.0.5</openmrsPlatformVersion>
+	    <fhir2Version>1.4.0</fhir2Version>
     </properties>
 </project>
