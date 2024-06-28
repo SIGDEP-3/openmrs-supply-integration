@@ -15,7 +15,7 @@
  
  	<!-- Uncomment the changeset below if you want to make the Item class persistable, see also Item and MSupplyIntegrationDaoTest -->
 
-	<changeSet id="supply-integration-2016-08-02-12-21" author="raff">
+	<changeSet id="supply-integration-2016-08-02-12-21" author="BOGUI">
 		<preConditions onFail="MARK_RAN">
 			<not><tableExists tableName="supply_integration_order"/></not>
 		</preConditions>

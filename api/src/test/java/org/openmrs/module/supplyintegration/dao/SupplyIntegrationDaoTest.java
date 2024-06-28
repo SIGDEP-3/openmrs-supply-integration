@@ -42,14 +42,15 @@ public class SupplyIntegrationDaoTest extends BaseModuleContextSensitiveTest {
 		supplyIntegrationOrder.setOwner(userService.getUser(1));
 		
 		//When
-		dao.saveItem(supplyIntegrationOrder);
+		dao.saveSupplyIntegrationOrder(supplyIntegrationOrder);
 		
 		//Let's clean up the cache to be sure getItemByUuid fetches from DB and not from cache
 		Context.flushSession();
 		Context.clearSession();
 		
 		//Then
-		SupplyIntegrationOrder savedSupplyIntegrationOrder = dao.getItemByUuid(supplyIntegrationOrder.getUuid());
+		SupplyIntegrationOrder savedSupplyIntegrationOrder = dao.getSupplyIntegrationOrderByUuid(supplyIntegrationOrder
+		        .getUuid());
 		
 		assertThat(savedSupplyIntegrationOrder, hasProperty("uuid", is(supplyIntegrationOrder.getUuid())));
 		assertThat(savedSupplyIntegrationOrder, hasProperty("owner", is(supplyIntegrationOrder.getOwner())));

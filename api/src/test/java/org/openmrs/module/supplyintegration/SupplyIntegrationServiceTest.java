@@ -7,7 +7,7 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.supplyintegration.api;
+package org.openmrs.module.supplyintegration;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +27,7 @@ import static org.junit.Assert.*;
  * This is a unit test, which verifies logic in MSupplyIntegrationService. It doesn't extend
  * BaseModuleContextSensitiveTest, thus it is run without the in-memory DB and Spring context.
  */
-public class MSupplyIntegrationServiceTest {
+public class SupplyIntegrationServiceTest {
 	
 	@InjectMocks
 	SupplyIntegrationServiceImpl basicModuleService;
@@ -44,18 +44,18 @@ public class MSupplyIntegrationServiceTest {
 	}
 	
 	@Test
-	public void saveItem_shouldSetOwnerIfNotSet() {
+	public void saveSupplyIntegrationOrder_shouldSetOwnerIfNotSet() {
 		//Given
 		SupplyIntegrationOrder supplyIntegrationOrder = new SupplyIntegrationOrder();
-		supplyIntegrationOrder.setDescription("some description");
+		supplyIntegrationOrder.setStatus("some description");
 		
-		when(dao.saveItem(supplyIntegrationOrder)).thenReturn(supplyIntegrationOrder);
+		when(dao.saveSupplyIntegrationOrder(supplyIntegrationOrder)).thenReturn(supplyIntegrationOrder);
 		
 		User user = new User();
 		when(userService.getUser(1)).thenReturn(user);
 		
 		//When
-		basicModuleService.saveItem(supplyIntegrationOrder);
+		basicModuleService.saveSupplyIntegrationOrder(supplyIntegrationOrder);
 		
 		//Then
 		assertThat(supplyIntegrationOrder, hasProperty("owner", is(user)));

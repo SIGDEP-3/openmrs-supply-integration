@@ -34,7 +34,7 @@ public interface SupplyIntegrationService extends OpenmrsService {
 	 */
 	@Authorized()
 	@Transactional(readOnly = true)
-	SupplyIntegrationOrder getItemByUuid(String uuid) throws APIException;
+	SupplyIntegrationOrder getSupplyIntegrationOrderByUuid(String uuid) throws APIException;
 	
 	/**
 	 * Saves an item. Sets the owner to superuser, if it is not set. It can be called by users with
@@ -46,7 +46,7 @@ public interface SupplyIntegrationService extends OpenmrsService {
 	 */
 	@Authorized(SupplyIntegrationConfig.MODULE_PRIVILEGE)
 	@Transactional
-	SupplyIntegrationOrder saveItem(SupplyIntegrationOrder supplyIntegrationOrder) throws APIException;
+	SupplyIntegrationOrder saveSupplyIntegrationOrder(SupplyIntegrationOrder supplyIntegrationOrder) throws APIException;
 	
 	boolean testServer(String url, String user, String pass) throws IOException;
 }

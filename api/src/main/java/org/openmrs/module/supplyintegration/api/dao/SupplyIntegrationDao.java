@@ -43,11 +43,12 @@ public class SupplyIntegrationDao {
 		return sessionFactory.getCurrentSession();
 	}
 	
-	public SupplyIntegrationOrder getItemByUuid(String uuid) {
-		return (SupplyIntegrationOrder) getSession().createCriteria(SupplyIntegrationOrder.class).add(Restrictions.eq("uuid", uuid)).uniqueResult();
+	public SupplyIntegrationOrder getSupplyIntegrationOrderByUuid(String uuid) {
+		return (SupplyIntegrationOrder) getSession().createCriteria(SupplyIntegrationOrder.class)
+		        .add(Restrictions.eq("uuid", uuid)).uniqueResult();
 	}
 	
-	public SupplyIntegrationOrder saveItem(SupplyIntegrationOrder supplyIntegrationOrder) {
+	public SupplyIntegrationOrder saveSupplyIntegrationOrder(SupplyIntegrationOrder supplyIntegrationOrder) {
 		getSession().saveOrUpdate(supplyIntegrationOrder);
 		return supplyIntegrationOrder;
 	}
@@ -70,17 +71,14 @@ public class SupplyIntegrationDao {
 		//
 		//		credentialsProvider.setCredentials(new AuthScope(url, 11223), new UsernamePasswordCredentials(user, pass));
 		
-		CloseableHttpClient httpclient = HttpClients.custom().build();
-		
 		//				final HttpParams httpParams = new BasicHttpParams();
 		//				HttpConnectionParams.setConnectionTimeout(httpParams, 4000);
-		HttpHost targetHost = new HttpHost(testURL.getHost(), testURL.getPort(), testURL.getProtocol());
 		//		//		DefaultHttpClient httpClient = new DefaultHttpClient(httpParams);
 		//		HttpClient httpClient = new DefaultHttpClient();
 		
-		BasicHttpContext localContext = new BasicHttpContext();
-		
-		try {
+		try (CloseableHttpClient httpclient = HttpClients.custom().build()) {
+			HttpHost targetHost = new HttpHost(testURL.getHost(), testURL.getPort(), testURL.getProtocol());
+			BasicHttpContext localContext = new BasicHttpContext();
 			HttpGet httpGet = new HttpGet(testURL.toURI());
 			Credentials credentials = new UsernamePasswordCredentials(user, pass);
 			Header bs = new BasicScheme().authenticate(credentials, httpGet, localContext);
@@ -103,7 +101,6 @@ public class SupplyIntegrationDao {
 			//			success = false;
 		}
 		finally {
-			httpclient.close();
 			log.debug("---------------------------------------> Connection closed");
 		}
 		

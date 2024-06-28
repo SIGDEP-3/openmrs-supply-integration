@@ -9,6 +9,7 @@
  */
 package org.openmrs.module.supplyintegration.api.impl;
 
+import lombok.Setter;
 import org.openmrs.api.APIException;
 import org.openmrs.api.UserService;
 import org.openmrs.api.impl.BaseOpenmrsService;
@@ -18,38 +19,29 @@ import org.openmrs.module.supplyintegration.api.dao.SupplyIntegrationDao;
 
 import java.io.IOException;
 
+@Setter
 public class SupplyIntegrationServiceImpl extends BaseOpenmrsService implements SupplyIntegrationService {
 	
+	/**
+	 * -- SETTER -- Injected in moduleApplicationContext.xml
+	 */
 	SupplyIntegrationDao dao;
 	
+	/**
+	 * -- SETTER -- Injected in moduleApplicationContext.xml
+	 */
 	UserService userService;
 	
-	/**
-	 * Injected in moduleApplicationContext.xml
-	 */
-	public void setDao(SupplyIntegrationDao dao) {
-		this.dao = dao;
-	}
-	
-	/**
-	 * Injected in moduleApplicationContext.xml
-	 */
-	public void setUserService(UserService userService) {
-		this.userService = userService;
+	@Override
+	public SupplyIntegrationOrder getSupplyIntegrationOrderByUuid(String uuid) throws APIException {
+		return dao.getSupplyIntegrationOrderByUuid(uuid);
 	}
 	
 	@Override
-	public SupplyIntegrationOrder getItemByUuid(String uuid) throws APIException {
-		return dao.getItemByUuid(uuid);
-	}
-	
-	@Override
-	public SupplyIntegrationOrder saveItem(SupplyIntegrationOrder supplyIntegrationOrder) throws APIException {
-		if (supplyIntegrationOrder.getOwner() == null) {
-			supplyIntegrationOrder.setOwner(userService.getUser(1));
-		}
+	public SupplyIntegrationOrder saveSupplyIntegrationOrder(SupplyIntegrationOrder supplyIntegrationOrder)
+	        throws APIException {
 		
-		return dao.saveItem(supplyIntegrationOrder);
+		return dao.saveSupplyIntegrationOrder(supplyIntegrationOrder);
 	}
 	
 	@Override

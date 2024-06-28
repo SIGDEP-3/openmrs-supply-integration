@@ -29,8 +29,11 @@ public class SupplyIntegrationConfig implements ApplicationContextAware {
 	public final static String MODULE_PRIVILEGE = "SupplyIntegration Privilege";
 	
 	public final static String GP_SUPPLY_URL = "supplyintegration.URL";
+	
 	public final static String GP_SUPPLY_USERNAME = "supplyintegration.userName";
+	
 	public final static String GP_SUPPLY_PASSWORD = "supplyintegration.password";
+	
 	public final static String GP_SUPPLY_OPENMRS_ENCOUNTER_UUIDS = "supplyintegration.openmrsEncounterType.uuid";
 	
 	private ApplicationContext applicationContext;

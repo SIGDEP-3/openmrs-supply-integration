@@ -26,6 +26,7 @@ import java.util.Date;
 @Setter
 @Getter
 public class SupplyIntegrationOrder extends BaseOpenmrsObject {
+	
 	@Id
 	@GeneratedValue
 	@Column(name = "supply_integration_order_id")
@@ -47,12 +48,12 @@ public class SupplyIntegrationOrder extends BaseOpenmrsObject {
 	
 	@Override
 	public Integer getId() {
-		return getSupplyIntegrationId();
+		return getSupplyIntegrationOrderId();
 	}
 	
 	@Override
 	public void setId(Integer id) {
-		setSupplyIntegrationId(id);
+		setSupplyIntegrationOrderId(id);
 	}
 	
 	@Override
