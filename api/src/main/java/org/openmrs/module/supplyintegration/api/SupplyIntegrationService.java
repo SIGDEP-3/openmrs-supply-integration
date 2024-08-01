@@ -9,6 +9,7 @@
  */
 package org.openmrs.module.supplyintegration.api;
 
+import org.openmrs.Order;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
@@ -17,6 +18,7 @@ import org.openmrs.module.supplyintegration.SupplyIntegrationOrder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * The main service of this module, which is exposed for other modules. See
@@ -49,4 +51,8 @@ public interface SupplyIntegrationService extends OpenmrsService {
 	SupplyIntegrationOrder saveSupplyIntegrationOrder(SupplyIntegrationOrder supplyIntegrationOrder) throws APIException;
 	
 	boolean testServer(String url, String user, String pass) throws IOException;
+	
+	SupplyIntegrationOrder getSupplyIntegrationOrderByOrder(Order order);
+	
+	List<SupplyIntegrationOrder> getSupplyOrderByStatus(String status);
 }

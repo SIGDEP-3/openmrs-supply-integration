@@ -12,26 +12,64 @@ package org.openmrs.module.supplyintegration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.BaseModuleActivator;
+import org.openmrs.module.DaemonToken;
+import org.openmrs.module.DaemonTokenAware;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Component;
 
 /**
  * This class contains the logic that is run every time this module is either started or shutdown
  */
-public class SupplyIntegrationActivator extends BaseModuleActivator {
+@Component
+public class SupplyIntegrationActivator extends BaseModuleActivator implements ApplicationContextAware, DaemonTokenAware {
 	
-	private Log log = LogFactory.getLog(this.getClass());
+	private static final Log log = LogFactory.getLog(SupplyIntegrationActivator.class);
+	
+	private static ApplicationContext applicationContext;
+	
+	private static DaemonToken daemonToken;
+	
+	@Autowired
+	private SupplyIntegrationOrderManager orderManager;
+	
+	@Autowired
+	private SupplyIntegrationConfig config;
 	
 	/**
 	 * @see #started()
 	 */
 	public void started() {
 		log.info("Started SupplyIntegration");
+		applicationContext.getAutowireCapableBeanFactory().autowireBean(this);
+		
+		orderManager.setDaemonToken(daemonToken);
+		
+		if (config.isLisEnabled()) {
+			orderManager.enableLisConnector();
+		}
 	}
 	
 	/**
 	 * @see #shutdown()
 	 */
 	public void shutdown() {
+		if (orderManager != null) {
+			orderManager.disableLisConnector();
+		}
 		log.info("Shutdown SupplyIntegration");
 	}
 	
+	@Override
+	public void setDaemonToken(DaemonToken daemonToken) {
+		this.daemonToken = daemonToken;
+	}
+	
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.applicationContext = applicationContext;
+	}
 }

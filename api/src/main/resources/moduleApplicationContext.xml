@@ -45,8 +45,8 @@
         </property>
     </bean>
 
-    <!-- Adds MSupplyIntegrationService to OpenMRS context so it can be accessed
-    calling Context.getService(MSupplyIntegrationService.class) -->
+    <!-- Adds SupplyIntegrationService to OpenMRS context so it can be accessed
+    calling Context.getService(SupplyIntegrationService.class) -->
     <bean parent="serviceContext">
         <property name="moduleService">
             <list>
@@ -55,4 +55,18 @@
             </list>
         </property>
     </bean>
+
+    <bean parent="openmrsEventListeners">
+        <property name="globalPropertyListeners">
+            <list merge="true">
+                <ref bean="supplyIntegrationOrder" />
+            </list>
+        </property>
+    </bean>
+
+<!--    <bean class="org.openmrs.eventbus.Event">-->
+<!--        <property name="subscription">-->
+<!--            <bean class="org.openmrs.module.supplyintegration.SupplyIntegrationOrderManager"></bean>-->
+<!--        </property>-->
+<!--    </bean>-->
 </beans>

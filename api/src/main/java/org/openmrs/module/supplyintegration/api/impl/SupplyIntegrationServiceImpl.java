@@ -10,6 +10,7 @@
 package org.openmrs.module.supplyintegration.api.impl;
 
 import lombok.Setter;
+import org.openmrs.Order;
 import org.openmrs.api.APIException;
 import org.openmrs.api.UserService;
 import org.openmrs.api.impl.BaseOpenmrsService;
@@ -18,6 +19,8 @@ import org.openmrs.module.supplyintegration.api.SupplyIntegrationService;
 import org.openmrs.module.supplyintegration.api.dao.SupplyIntegrationDao;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 @Setter
 public class SupplyIntegrationServiceImpl extends BaseOpenmrsService implements SupplyIntegrationService {
@@ -47,5 +50,15 @@ public class SupplyIntegrationServiceImpl extends BaseOpenmrsService implements 
 	@Override
 	public boolean testServer(String url, String user, String pass) throws IOException {
 		return dao.testServer(url, user, pass);
+	}
+	
+	@Override
+	public SupplyIntegrationOrder getSupplyIntegrationOrderByOrder(Order order) {
+		return dao.getSupplyIntegrationOrderByOrder(order);
+	}
+	
+	@Override
+	public List<SupplyIntegrationOrder> getSupplyOrderByStatus(String status) {
+		return  dao.getSupplyOrderByStatus(status);
 	}
 }

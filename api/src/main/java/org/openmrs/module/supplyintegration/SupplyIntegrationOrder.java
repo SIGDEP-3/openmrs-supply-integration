@@ -10,6 +10,7 @@
 package org.openmrs.module.supplyintegration;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.openmrs.BaseOpenmrsObject;
 import org.openmrs.Order;
@@ -25,6 +26,7 @@ import java.util.Date;
 @Table(name = "supply_integration_order")
 @Setter
 @Getter
+@NoArgsConstructor
 public class SupplyIntegrationOrder extends BaseOpenmrsObject {
 	
 	@Id

@@ -61,6 +61,11 @@
 		<description>Encounter type used to create and link the Drug Order to the encounter</description>
 		<defaultValue>encounter type uuid</defaultValue>
 	</globalProperty>
+	<globalProperty>
+		<property>@MODULE_ID@.openmrsOrderType.uuid</property>
+		<description>Order type used to create the Drug Order linked to the encounter</description>
+		<defaultValue></defaultValue>
+	</globalProperty>
 	
 	
 	<!-- Required Privileges 

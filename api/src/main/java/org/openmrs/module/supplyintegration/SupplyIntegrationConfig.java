@@ -34,7 +34,17 @@ public class SupplyIntegrationConfig implements ApplicationContextAware {
 	
 	public final static String GP_SUPPLY_PASSWORD = "supplyintegration.password";
 	
-	public final static String GP_SUPPLY_OPENMRS_ENCOUNTER_UUIDS = "supplyintegration.openmrsEncounterType.uuid";
+	public final static String GP_SUPPLY_OPENMRS_ENCOUNTER_TYPE_UUID = "supplyintegration.openmrsEncounterType.uuid";
+	
+	public final static String GP_SUPPLY_OPENMRS_ORDER_TYPE_UUID = "supplyintegration.openmrsOrderType.uuid";
+	
+	public final static String ORDER_SEND_STATUS_SENT = "SENT";
+	
+	public final static String ORDER_SEND_STATUS_AWAITING_FOR_SEND = "AWAITING_FOR_SEND";
+	
+	public final static String ORDER_SEND_STATUS_AWAITING_FOR_RESEND = "AWAITING_FOR_RESEND";
+	
+	public final static String ORDER_SEND_STATUS_ERROR = "ERROR";
 	
 	private ApplicationContext applicationContext;
 	
@@ -54,8 +64,12 @@ public class SupplyIntegrationConfig implements ApplicationContextAware {
 		return administrationService.getGlobalProperty(GP_SUPPLY_PASSWORD);
 	}
 	
-	public String getOpenmrsEncounterType() {
-		return administrationService.getGlobalProperty(GP_SUPPLY_OPENMRS_ENCOUNTER_UUIDS);
+	public String getOpenmrsOrderTypeUuid() {
+		return administrationService.getGlobalProperty(GP_SUPPLY_OPENMRS_ORDER_TYPE_UUID);
+	}
+	
+	public String getOpenmrsEncounterTypeUuid() {
+		return administrationService.getGlobalProperty(GP_SUPPLY_OPENMRS_ENCOUNTER_TYPE_UUID);
 	}
 	
 	public boolean isLisEnabled() {

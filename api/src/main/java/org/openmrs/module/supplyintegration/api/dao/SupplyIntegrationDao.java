@@ -21,6 +21,7 @@ import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.*;
 import org.apache.http.protocol.BasicHttpContext;
 import org.hibernate.criterion.Restrictions;
+import org.openmrs.Order;
 import org.openmrs.api.db.hibernate.DbSession;
 import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.module.supplyintegration.SupplyIntegrationOrder;
@@ -30,6 +31,7 @@ import org.springframework.stereotype.Repository;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
 @Repository("supplyintegration.SupplyIntegrationDao")
 public class SupplyIntegrationDao {
@@ -105,5 +107,16 @@ public class SupplyIntegrationDao {
 		}
 		
 		return success;
+	}
+	
+	public SupplyIntegrationOrder getSupplyIntegrationOrderByOrder(Order order) {
+		return (SupplyIntegrationOrder) getSession().createCriteria(SupplyIntegrationOrder.class)
+		        .add(Restrictions.eq("order", order)).uniqueResult();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<SupplyIntegrationOrder> getSupplyOrderByStatus(String status) {
+		return getSession().createCriteria(SupplyIntegrationOrder.class)
+				.add(Restrictions.eq("status", status)).list();
 	}
 }

@@ -1,6 +1,5 @@
 package org.openmrs.module.supplyintegration.api.event;
 
-import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.openmrs.*;
@@ -12,6 +11,9 @@ import org.openmrs.api.context.Daemon;
 import org.openmrs.event.EventListener;
 import org.openmrs.module.DaemonToken;
 import org.openmrs.module.supplyintegration.SupplyIntegrationConfig;
+import org.openmrs.module.supplyintegration.SupplyIntegrationOrder;
+import org.openmrs.module.supplyintegration.SupplyIntegrationOrderManager;
+import org.openmrs.module.supplyintegration.api.SupplyIntegrationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +22,15 @@ import org.springframework.stereotype.Component;
 import javax.jms.JMSException;
 import javax.jms.MapMessage;
 import javax.jms.Message;
+import java.util.Date;
+import java.util.UUID;
 
-@Component("visitEncounterListener")
+@Component("EncounterCreationListener")
 public class EncounterCreationListener implements EventListener {
 	
 	private static final Logger log = LoggerFactory.getLogger(EncounterCreationListener.class);
 	
 	@Setter
-	@Getter
 	private DaemonToken daemonToken;
 	
 	@Autowired
@@ -38,6 +41,12 @@ public class EncounterCreationListener implements EventListener {
 	
 	@Autowired
 	private SupplyIntegrationConfig config;
+	
+	@Autowired
+	private SupplyIntegrationService supplyIntegrationService;
+	
+	@Autowired
+	private SupplyIntegrationOrderManager supplyIntegrationOrder;
 	
 	@Override
 	public void onMessage(Message message) {
@@ -82,15 +91,19 @@ public class EncounterCreationListener implements EventListener {
 				return;
 			}
 
-			if (encounter != null && encounter.getEncounterType().getUuid().equals(config.getOpenmrsEncounterType())) {
-				log.trace("Found order(s) for encounter {}", encounter);
+			if (encounter != null && encounter.getEncounterType().getUuid().equals(config.getOpenmrsEncounterTypeUuid())) {
+				log.trace("Is the right encounter {}", encounter);
 				try {
 					Obs regimeObs = encounter.getObs().stream().filter(o -> o.getConcept().getUuid().startsWith("162240")).findFirst().orElse(null);
-					if (regimeObs != null) {
-						Order order = new Order();
+					Obs treatmentTypeObs = encounter.getObs().stream().filter(o -> o.getConcept().getUuid().startsWith("1255")).findFirst().orElse(null);
+					if (regimeObs != null && treatmentTypeObs != null) {
+						Order order;
+						
 						if (encounter.getOrders().isEmpty()) {
-							EncounterProvider encounterProvider = encounter.getEncounterProviders().stream().findFirst().orElse(null);
+							log.trace("No orders found for encounter {}", encounter);
+							order = new Order();
 							
+							EncounterProvider encounterProvider = encounter.getEncounterProviders().stream().findFirst().orElse(null);
 							order.setEncounter(encounter);
 							
 							if (encounterProvider != null) {
@@ -98,33 +111,69 @@ public class EncounterCreationListener implements EventListener {
 							}
 							
 							order.setPatient(encounter.getPatient());
-							order.setOrderType(orderService.getOrderType(2));
+							
+							OrderType orderType = orderService.getOrderTypeByUuid(config.getOpenmrsOrderTypeUuid());
+
+							if (orderType != null) {
+								order.setOrderType(orderType);
+							}
 							order.setDateActivated(encounter.getEncounterDatetime());
 							
-							CareSetting careSetting = new CareSetting();
-							careSetting.setCareSettingType(CareSetting.CareSettingType.INPATIENT);
-							order.setCareSetting(careSetting);
-							order.setAction(Order.Action.RENEW);
-							order.setConcept(regimeObs.getConcept());
-							
-							orderService.saveOrder(order, new OrderContext());
+							CareSetting careSetting = orderService.getCareSettingByUuid("c365e560-c3ec-11e3-9c1a-0800200c9a66");
+							if (careSetting != null) {
+								order.setCareSetting(careSetting);
+							}
+							getTreatmentStatus(regimeObs, treatmentTypeObs, order);
+							order.setUrgency(Order.Urgency.ROUTINE);
 						} else {
+							log.trace("Orders found for encounter {}", encounter);
 							order = encounter.getOrders().stream().findFirst().orElse(null);
 							if (order != null) {
 								order.setDateActivated(encounter.getEncounterDatetime());
-								order.setAction(Order.Action.RENEW);
-								order.setConcept(regimeObs.getConcept());
+								getTreatmentStatus(regimeObs, treatmentTypeObs, order);
 							}
 						}
-						orderService.saveOrder(order, new OrderContext());
+						createOrder(order);
+						
 					}
 					
 				} catch (Exception e) {
 					log.error("An exception occurred while trying to create the order for encounter {}", encounter, e);
 				}
 			} else {
-				log.trace("No orders found for encounter {}", encounter);
+				log.trace("Is not the right encounter {}", encounter);
 			}
 		}
+	}
+	
+	private void getTreatmentStatus(Obs regimeObs, Obs treatmentTypeObs, Order order) {
+		Concept treatmentStatus = treatmentTypeObs.getValueCoded();
+		if (treatmentStatus.getConceptId().equals(1256)) {
+			order.setAction(Order.Action.NEW);
+		} else if (!treatmentStatus.getConceptId().equals(1107)) {
+			order.setAction(Order.Action.RENEW);
+		}
+		order.setConcept(regimeObs.getValueCoded());
+	}
+	
+	public void createOrder(Order order) {
+		Order savedOrder = orderService.saveOrder(order, new OrderContext());
+		createSupplyIntegrationOrder(savedOrder);
+	}
+	
+	public void createSupplyIntegrationOrder(Order order) {
+		SupplyIntegrationOrder supplyIntegrationOrder = supplyIntegrationService.getSupplyIntegrationOrderByOrder(order);
+		if (supplyIntegrationOrder != null) {
+			if (supplyIntegrationOrder.getStatus().equals(SupplyIntegrationConfig.ORDER_SEND_STATUS_SENT)) {
+				supplyIntegrationOrder.setStatus(SupplyIntegrationConfig.ORDER_SEND_STATUS_AWAITING_FOR_RESEND);
+			}
+		} else {
+			supplyIntegrationOrder = new SupplyIntegrationOrder();
+			supplyIntegrationOrder.setStatus(SupplyIntegrationConfig.ORDER_SEND_STATUS_AWAITING_FOR_SEND);
+			supplyIntegrationOrder.setOrder(order);
+			supplyIntegrationOrder.setUuid(UUID.randomUUID().toString());
+			supplyIntegrationOrder.setDateCreated(new Date());
+		}
+		supplyIntegrationService.saveSupplyIntegrationOrder(supplyIntegrationOrder);
 	}
 }
