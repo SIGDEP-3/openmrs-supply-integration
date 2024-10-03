@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-@Component("supplyIntegrationOrder")
+@Component("supplyIntegrationOrderManager")
 public class SupplyIntegrationOrderManager implements GlobalPropertyListener {
 	
 	private static final Logger log = LoggerFactory.getLogger(SupplyIntegrationOrderManager.class);
@@ -32,12 +32,12 @@ public class SupplyIntegrationOrderManager implements GlobalPropertyListener {
 	
 	@Override
 	public boolean supportsPropertyName(String propertyName) {
-		return SupplyIntegrationConfig.GP_SUPPLY_URL.equals(propertyName);
+		return SupplyIntegrationConfig.GP_SUPPLY_PASSWORD.equals(propertyName);
 	}
 	
 	@Override
 	public void globalPropertyChanged(GlobalProperty newValue) {
-		log.trace("Notified of change to property {}", SupplyIntegrationConfig.GP_SUPPLY_URL);
+		log.trace("Notified of change to property {}", SupplyIntegrationConfig.GP_SUPPLY_PASSWORD);
 		
 		if (StringUtils.isNotBlank((String) newValue.getValue())) {
 			enableLisConnector();

@@ -16,7 +16,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.openmrs.User;
 import org.openmrs.api.UserService;
-import org.openmrs.module.supplyintegration.SupplyIntegrationOrder;
+import org.openmrs.module.supplyintegration.models.SupplyIntegrationOrder;
 import org.openmrs.module.supplyintegration.api.dao.SupplyIntegrationDao;
 import org.openmrs.module.supplyintegration.api.impl.SupplyIntegrationServiceImpl;
 import static org.mockito.Mockito.*;

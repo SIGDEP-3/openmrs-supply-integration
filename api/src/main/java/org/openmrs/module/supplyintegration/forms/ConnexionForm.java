@@ -1,4 +1,4 @@
-package org.openmrs.module.supplyintegration.api.forms;
+package org.openmrs.module.supplyintegration.forms;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,5 +14,9 @@ public class ConnexionForm {
 	String username;
 	
 	String password;
+	
+	String receptionEndpoint;
+	
+	String sendingEndpoint;
 	
 }

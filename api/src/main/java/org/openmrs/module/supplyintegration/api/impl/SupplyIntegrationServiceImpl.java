@@ -10,16 +10,15 @@
 package org.openmrs.module.supplyintegration.api.impl;
 
 import lombok.Setter;
-import org.openmrs.Order;
+import org.openmrs.*;
 import org.openmrs.api.APIException;
 import org.openmrs.api.UserService;
 import org.openmrs.api.impl.BaseOpenmrsService;
-import org.openmrs.module.supplyintegration.SupplyIntegrationOrder;
+import org.openmrs.module.supplyintegration.models.SupplyIntegrationOrder;
 import org.openmrs.module.supplyintegration.api.SupplyIntegrationService;
 import org.openmrs.module.supplyintegration.api.dao.SupplyIntegrationDao;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 @Setter
@@ -59,6 +58,21 @@ public class SupplyIntegrationServiceImpl extends BaseOpenmrsService implements 
 	
 	@Override
 	public List<SupplyIntegrationOrder> getSupplyOrderByStatus(String status) {
-		return  dao.getSupplyOrderByStatus(status);
+		return dao.getSupplyOrderByStatus(status);
+	}
+	
+	@Override
+	public Encounter findPatientLatestEncounter(String identifier, EncounterType encounterType) {
+		return dao.findPatientLatestEncounter(identifier, encounterType);
+	}
+	
+	@Override
+	public Patient findPatientByIdentifier(String identifier) {
+		return dao.findPatientByIdentifier(identifier);
+	}
+	
+	@Override
+	public Obs findPatientLatestObs(Person person, Concept concept) {
+		return dao.findPatientLatestObs(person, concept);
 	}
 }

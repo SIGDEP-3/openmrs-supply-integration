@@ -62,9 +62,44 @@
 		<defaultValue>encounter type uuid</defaultValue>
 	</globalProperty>
 	<globalProperty>
+		<property>@MODULE_ID@.openmrsOtherEncounterType.uuid</property>
+		<description>Encounter type used to create and received information to the encounter</description>
+		<defaultValue>encounter-type-uuid</defaultValue>
+	</globalProperty>
+	<globalProperty>
 		<property>@MODULE_ID@.openmrsOrderType.uuid</property>
 		<description>Order type used to create the Drug Order linked to the encounter</description>
-		<defaultValue></defaultValue>
+		<defaultValue>other-encounter-type-uuid</defaultValue>
+	</globalProperty>
+	<globalProperty>
+		<property>@MODULE_ID@.sendOrder.endpoint</property>
+		<description>End point to send order to the server</description>
+		<defaultValue>/send-order</defaultValue>
+	</globalProperty>
+	<globalProperty>
+		<property>@MODULE_ID@.receiveDispensation.endpoint</property>
+		<description>End point to receive dispensation</description>
+		<defaultValue>/receive-dispensation</defaultValue>
+	</globalProperty>
+	<globalProperty>
+		<property>@MODULE_ID@.treatmentEndDate.concept</property>
+		<description>The UUID of the concept used for the dispensation treatment end date</description>
+		<defaultValue>TED-UUID</defaultValue>
+	</globalProperty>
+	<globalProperty>
+		<property>@MODULE_ID@.treatmentRegime.concept</property>
+		<description>The UUID of the concept used for the dispensation regime</description>
+		<defaultValue>TR-UID</defaultValue>
+	</globalProperty>
+	<globalProperty>
+		<property>@MODULE_ID@.treatmentDuration.concept</property>
+		<description>The UUID of the concept used for the dispensation treatment duration</description>
+		<defaultValue>TD-UID</defaultValue>
+	</globalProperty>
+	<globalProperty>
+		<property>@MODULE_ID@.treatmentDate.concept</property>
+		<description>The UUID of the concept used for the dispensation treatment date</description>
+		<defaultValue>TDT-UID</defaultValue>
 	</globalProperty>
 	
 	

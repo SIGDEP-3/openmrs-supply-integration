@@ -21,10 +21,10 @@ import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.*;
 import org.apache.http.protocol.BasicHttpContext;
 import org.hibernate.criterion.Restrictions;
-import org.openmrs.Order;
+import org.openmrs.*;
 import org.openmrs.api.db.hibernate.DbSession;
 import org.openmrs.api.db.hibernate.DbSessionFactory;
-import org.openmrs.module.supplyintegration.SupplyIntegrationOrder;
+import org.openmrs.module.supplyintegration.models.SupplyIntegrationOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -116,7 +116,24 @@ public class SupplyIntegrationDao {
 	
 	@SuppressWarnings("unchecked")
 	public List<SupplyIntegrationOrder> getSupplyOrderByStatus(String status) {
-		return getSession().createCriteria(SupplyIntegrationOrder.class)
-				.add(Restrictions.eq("status", status)).list();
+		return getSession().createCriteria(SupplyIntegrationOrder.class).add(Restrictions.eq("status", status)).list();
+	}
+	
+	public Encounter findPatientLatestEncounter(String identifier, EncounterType encounterType) {
+		return (Encounter) getSession().createCriteria(Encounter.class, "e").createAlias("e.patient", "p")
+		        .createAlias("p.identifiers", "i").add(Restrictions.eq("i.identifier", identifier))
+		        .add(Restrictions.eq("e.encounterType", encounterType)).add(Restrictions.eq("e.voided", false))
+		        .addOrder(org.hibernate.criterion.Order.desc("e.encounterDatetime")).setMaxResults(1).uniqueResult();
+	}
+	
+	public Patient findPatientByIdentifier(String identifier) {
+		return (Patient) getSession().createCriteria(Patient.class, "p").createAlias("p.identifiers", "i")
+		        .add(Restrictions.eq("i.identifier", identifier)).uniqueResult();
+	}
+	
+	public Obs findPatientLatestObs(Person person, Concept concept) {
+		return (Obs) getSession().createCriteria(Obs.class).add(Restrictions.eq("person", person))
+		        .add(Restrictions.eq("concept", concept)).addOrder(org.hibernate.criterion.Order.desc("obsDatetime"))
+		        .setMaxResults(1).uniqueResult();
 	}
 }

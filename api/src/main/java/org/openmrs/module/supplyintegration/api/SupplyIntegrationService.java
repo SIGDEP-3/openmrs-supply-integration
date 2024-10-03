@@ -9,12 +9,12 @@
  */
 package org.openmrs.module.supplyintegration.api;
 
-import org.openmrs.Order;
+import org.openmrs.*;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.supplyintegration.SupplyIntegrationConfig;
-import org.openmrs.module.supplyintegration.SupplyIntegrationOrder;
+import org.openmrs.module.supplyintegration.models.SupplyIntegrationOrder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
@@ -55,4 +55,10 @@ public interface SupplyIntegrationService extends OpenmrsService {
 	SupplyIntegrationOrder getSupplyIntegrationOrderByOrder(Order order);
 	
 	List<SupplyIntegrationOrder> getSupplyOrderByStatus(String status);
+	
+	Encounter findPatientLatestEncounter(String identifier, EncounterType encounterType);
+	
+	Patient findPatientByIdentifier(String identifier);
+	
+	Obs findPatientLatestObs(Person person, Concept concept);
 }

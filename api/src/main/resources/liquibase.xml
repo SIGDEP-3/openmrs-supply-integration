@@ -49,5 +49,53 @@
         baseColumnNames="order_id"  referencedTableName="orders"
                                  referencedColumnNames="order_id" />
     </changeSet>
- 
+
+	<changeSet id="supply-integration-add-auto-send-task" author="BOGUI SERGE">
+		<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="0">
+				SELECT COUNT(*) FROM scheduler_task_config WHERE name = 'Auto send Drug Order Task';
+			</sqlCheck>
+		</preConditions>
+		<sql>
+			INSERT INTO scheduler_task_config (name, description, schedulable_class, start_time, start_time_pattern,
+			repeat_interval, start_on_startup, started, created_by, date_created,
+			changed_by, date_changed, last_execution_time, uuid)
+			VALUES ('Auto send Drug Order Task', null,
+			'org.openmrs.module.supplyintegration.scheduler.SupplyIntegrationOrderSendTask', '2024-09-30 15:36:23',
+			'MM/dd/yyyy HH:mm:ss', 300, 1, 1, 1, '2024-09-30 15:37:03', null, null, null,
+			'b3cbcca9-d47f-4b9f-94d0-10b83c7e6cd9');
+		</sql>
+	</changeSet>
+
+	<changeSet id="supply-integration-add-auto-receive-task" author="BOGUI SERGE">
+		<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="0">
+				SELECT COUNT(*) FROM scheduler_task_config WHERE name = 'Auto receive Drug Dispensation Task';
+			</sqlCheck>
+		</preConditions>
+		<sql>
+			INSERT INTO scheduler_task_config (name, description, schedulable_class, start_time, start_time_pattern,
+			repeat_interval, start_on_startup, started, created_by, date_created,
+			changed_by, date_changed, last_execution_time, uuid)
+			VALUES ('Auto receive Drug Dispensation Task', null,
+			'org.openmrs.module.supplyintegration.scheduler.SupplyIntegrationDispensationReceptionTask', NOW(),
+			'MM/dd/yyyy HH:mm:ss', 300, 1, 1, 1, NOW(), null, null, null,
+			'b3cbcca9-d47c-4b9f-94d0-10b83c7e6cd0');
+		</sql>
+	</changeSet>
+
+
+	<changeSet id="supply-integration-add-drug-frequency" author="BOGUI SERGE">
+		<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="0">
+				SELECT COUNT(*) FROM order_frequency WHERE uuid = 'b3cbccb0-d47c-4b9f-94d0-10b83c7e6cd1';
+			</sqlCheck>
+		</preConditions>
+		<sql>
+			INSERT INTO order_frequency (concept_id, frequency_per_day, creator, date_created, retired, retired_by,
+			date_retired, retire_reason, changed_by, date_changed, uuid)
+			VALUES (160862, 1, 1, '2024-10-01 13:39:26', 0, null, null, null, null, null, 'b3cbccb0-d47c-4b9f-94d0-10b83c7e6cd1');
+		</sql>
+	</changeSet>
+
 </databaseChangeLog>

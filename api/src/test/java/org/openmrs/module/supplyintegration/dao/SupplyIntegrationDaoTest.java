@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.junit.Ignore;
 import org.openmrs.api.UserService;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.supplyintegration.SupplyIntegrationOrder;
+import org.openmrs.module.supplyintegration.models.SupplyIntegrationOrder;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import static org.hamcrest.Matchers.*;

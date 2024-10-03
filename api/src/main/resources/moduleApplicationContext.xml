@@ -59,7 +59,7 @@
     <bean parent="openmrsEventListeners">
         <property name="globalPropertyListeners">
             <list merge="true">
-                <ref bean="supplyIntegrationOrder" />
+                <ref bean="supplyIntegrationOrderManager" />
             </list>
         </property>
     </bean>

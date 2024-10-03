@@ -7,7 +7,7 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.supplyintegration;
+package org.openmrs.module.supplyintegration.models;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,7 +39,7 @@ public class SupplyIntegrationOrder extends BaseOpenmrsObject {
 	private Order order;
 	
 	@Basic
-	@Column(name = "status", length = 255)
+	@Column(name = "status")
 	private String status;
 	
 	@Column(name = "last_transfer_attempt_date")

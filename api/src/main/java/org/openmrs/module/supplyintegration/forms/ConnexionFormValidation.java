@@ -1,4 +1,4 @@
-package org.openmrs.module.supplyintegration.api.forms;
+package org.openmrs.module.supplyintegration.forms;
 
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;

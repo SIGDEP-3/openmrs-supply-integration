@@ -14,13 +14,32 @@
 <form:form modelAttribute="connexionForm" method="post" action="" id="form">
 <table>
   <tr>
-   <td><label for="url">URL : </label></td>
+   <td><label for="url">URL de base : </label></td>
    <td>
        <form:input path="url" cssClass="form-control form-control-sm picker" size="100" id="url" />
        <form:errors path="url" cssClass="error"/>
 <%--       <input id="url" required type="url" name="url" size="100" placeholder="https://" value="${connectionForm.url}" />--%>
    </td>
   </tr>
+
+  <tr>
+   <td><label for="sendingEndpoint">Lien de terminaison d'envoi : </label></td>
+   <td>
+       <form:input path="sendingEndpoint" cssClass="form-control form-control-sm picker" size="100" id="sendingEndpoint" />
+       <form:errors path="sendingEndpoint" cssClass="error"/>
+<%--       <input id="url" required type="url" name="url" size="100" placeholder="https://" value="${connectionForm.url}" />--%>
+   </td>
+  </tr>
+
+  <tr>
+   <td><label for="receptionEndpoint">Lien de terminaison de reception : </label></td>
+   <td>
+       <form:input path="receptionEndpoint" cssClass="form-control form-control-sm picker" size="100" id="receptionEndpoint" />
+       <form:errors path="receptionEndpoint" cssClass="error"/>
+<%--       <input id="url" required type="url" name="url" size="100" placeholder="https://" value="${connectionForm.url}" />--%>
+   </td>
+  </tr>
+
   <tr>
    <td><label for="username">Nom d'utilisateur : </label></td>
    <td>
